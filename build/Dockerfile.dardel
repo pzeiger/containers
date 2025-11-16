@@ -1,0 +1,37 @@
+# Generated Dockerfile for dardel
+# Generated on: 2025-11-16T00:16:52.704660
+# Container type: docker
+
+FROM ubuntu:24.04
+
+ARG MAINTAINER=paul.zeiger@physics.uu.se
+ARG DESCRIPTION=Container for Dardel with ROCm support
+
+# Module: base_tools (version: latest)
+# Base development tools module
+RUN apt-get update && apt-get full-upgrade -y && \
+    apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    wget
+
+USER ubuntu
+WORKDIR /home/ubuntu
+
+
+# Module: python (version: 3.12)
+# Copy uv into image
+USER ubuntu
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /home/ubuntu/bin/
+ENV PATH="/home/ubuntu/bin:$PATH"
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN uv venv --python 3.12
+RUN uv pip install --no-cache-dir --upgrade pip setuptools wheel
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+
+
+# Final cleanup
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
