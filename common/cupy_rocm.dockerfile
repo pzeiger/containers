@@ -1,6 +1,7 @@
+USER root
+
 # CuPy {version} with ROCm - GPU-accelerated NumPy-like array library
 RUN <<'EOF'
-set -euxo pipefail
 
 # Install dependencies
 apt-get update

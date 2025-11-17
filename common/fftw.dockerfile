@@ -71,7 +71,7 @@ echo "  - ${FFTW_PREFIX}/double-mpi (double precision, MPI)"
 echo "  - ${FFTW_PREFIX}/single-mpi (single precision, MPI)"
 EOF
 
-ENV FFTW_HOME={install_prefix}/fftw-{version}
+ENV FFTW_HOME={install_prefix}/fftw-default
 ENV FFTW_DOUBLE_DIR=${FFTW_HOME}/double
 ENV FFTW_SINGLE_DIR=${FFTW_HOME}/single
 ENV FFTW_DOUBLE_MPI_DIR=${FFTW_HOME}/double-mpi

@@ -60,6 +60,5 @@ rm -rf OpenBLAS-${OPENBLAS_VERSION}*
 echo "OpenBLAS {version} installed successfully"
 EOF
 
-
-ENV MPICH_HOME={install_prefix}/openblas-default
+ENV OPENBLAS_HOME={install_prefix}/openblas-default
 ENV LD_LIBRARY_PATH={install_prefix}/openblas-default/lib:${LD_LIBRARY_PATH}

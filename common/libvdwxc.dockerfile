@@ -23,6 +23,7 @@ tar xzf libvdwxc-${LIBVDWXC_VERSION}.tar.gz
 cd libvdwxc-${LIBVDWXC_VERSION}
 
 # Build libvdwxc
+autoreconf -i
 mkdir build && cd build
 
 BUILD_FLAGS_C="{build_flags_c}"
@@ -30,7 +31,7 @@ BUILD_FLAGS_F="{build_flags_f}"
 
 ../configure --prefix=${LIBVDWXC_PREFIX} \
     --with-mpi=${MPICH_HOME} \
-    --with-fftw3={install-prefix}/fftw-default/double-mpi
+    --with-fftw3=${FFTW_DOUBLE_MPI_DIR}
     CFLAGS="${BUILD_FLAGS_C}" \
     FFLAGS="${BUILD_FLAGS_F}"
 make -j{build_threads}

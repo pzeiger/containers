@@ -2,7 +2,6 @@ USER root
 
 # common/scalapack.dockerfile
 RUN <<'EOF'
-set -euxo pipefail
 
 apt-get update
 apt-get install -y \
@@ -30,7 +29,7 @@ cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_Fortran_FLAGS="{build_flags_f}" \
     -DCMAKE_C_FLAGS="{build_flags_c}" \
-    -DBLAS_LIBRARIES="-L{install_prefix}/openblas-default/lib -lopenblas" \
+    -DBLAS_LIBRARIES="-L${OPENBLAS_HOME}/lib -lopenblas" \
     -DLAPACK_FOUND=ON
 
 make -j{build_threads}

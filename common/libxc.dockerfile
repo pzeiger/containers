@@ -2,7 +2,6 @@ USER root
 
 # libxc {version} module - DFT exchange-correlation functionals library
 RUN <<'EOF'
-set -euxo pipefail
 
 # Install dependencies
 apt-get update

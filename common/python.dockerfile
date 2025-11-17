@@ -3,7 +3,6 @@ USER root
 
 # common/uv_python.dockerfile
 RUN <<'EOF'
-set -euxo pipefail
 
 apt-get update
 apt-get install \
