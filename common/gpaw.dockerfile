@@ -1,7 +1,7 @@
 
 RUN << 'EOF'
-
-tee ~/.gpaw/siteconfig.py << INNER_EOF
+GPAW_CONFIG={install_prefix}/gpaw/siteconfig.py
+tee ${GPAW_CONFIG=} << INNER_EOF
 if '-fopenmp' not in extra_compile_args:
     extra_compile_args += ['-fopenmp']
 
@@ -34,7 +34,7 @@ if 'fftw3' not in libraries:
 
 INNER_EOF
 
-pip install gpaw
+pip install gpaw[full]
 
 EOF
 

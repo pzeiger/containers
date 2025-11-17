@@ -6,7 +6,7 @@ set -euxo pipefail
 
 # Install dependencies
 apt-get update
-apt-get install -y \
+apt-get install \
     build-essential \
     gfortran \
     wget \
@@ -22,18 +22,25 @@ wget https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VER
 tar xf libxc-${LIBXC_VERSION}.tar.gz
 cd libxc-${LIBXC_VERSION}
 
+BUILD_FLAGS_C="{build_flags_c}"
+BUILD_FLAGS_F="{build_flags_f}"
+
 # Configure with optimizations
+autoreconf -i
 ./configure --prefix=${LIBXC_PREFIX} \
     --enable-shared \
     --disable-static \
     --enable-fortran \
-    CFLAGS="-O3 -march=native" \
-    FCFLAGS="-O3 -march=native"
+    CFLAGS="${BUILD_FLAGS_C}" \
+    FFLAGS="${BUILD_FLAGS_F}"
 
 # Build and install
 make -j{build_threads}
 make check
 make install
+
+# install python bindings
+python setup.py install
 
 # Create symlink for easy reference
 ln -sf ${LIBXC_PREFIX} {install_prefix}/libxc-default
@@ -44,12 +51,4 @@ rm -rf libxc-${LIBXC_VERSION}*
 
 echo "libxc {version} installed successfully"
 EOF
-
-USER ubuntu
-WORKDIR /home/ubuntu
-RUN << 'EOF'
-which python
-python setup.py install
-EOF
-
 

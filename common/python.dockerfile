@@ -27,7 +27,7 @@ cat > /usr/local/bin/pip <<'PIP_WRAPPER'
 if [ "$1" = "install" ]; then
     # Redirect install to uv (remove "install" argument since uv pip already has it)
     shift  # Remove "install" from arguments
-    exec uv pip install --system --no-cache-dir "$@"
+    exec uv pip install --system --no-cache-dir --break-system-packages "$@"
 else
     # Pass all other commands to native pip
     exec /usr/bin/pip-native "$@"
@@ -44,7 +44,7 @@ cat > /usr/local/bin/pip3 <<'PIP3_WRAPPER'
 if [ "$1" = "install" ]; then
     # Redirect install to uv
     shift
-    exec uv pip install --system --no-cache-dir "$@"
+    exec uv pip install --system --no-cache-dir --break-system-packages "$@"
 else
     # Pass all other commands to native pip
     exec /usr/bin/pip3-native "$@"
@@ -61,6 +61,11 @@ echo "✓ Python environment ready"
 uv --version
 python --version
 
+which python
+which pip
 pip install -U setuptools wheel
+
+
+
 EOF
 

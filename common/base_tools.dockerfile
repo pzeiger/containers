@@ -26,18 +26,18 @@ apt-get install \
     libtool \
     wget
 
-# Create environment paths script
-cat > {install_prefix}/environment.sh <<'ENVIRONMENT'
-# Add compiled software to standard paths
-export LD_LIBRARY_PATH=/opt/software/*/lib:/opt/software/*/*/lib:${LD_LIBRARY_PATH}
-export PATH=/opt/software/*/bin:/opt/software/*/*/bin:${PATH}
-export PKG_CONFIG_PATH=/opt/software/*/lib/pkgconfig:/opt/software/*/*/lib/pkgconfig:${PKG_CONFIG_PATH}
-export CPATH=/opt/software/*/include:/opt/software/*/*/include:${CPATH}
-ENVIRONMENT
-
-chmod 644 {install_prefix}/environment.sh
-
-echo "source {install_prefix}/environment.sh" >> /etc/bash.bashrc
+## Create environment paths script
+#cat > {install_prefix}/environment.sh <<'ENVIRONMENT'
+## Add compiled software to standard paths
+#export LD_LIBRARY_PATH=/opt/software/*/lib:/opt/software/*/*/lib:${LD_LIBRARY_PATH:-}
+#export PATH=/opt/software/*/bin:/opt/software/*/*/bin:${PATH}
+#export PKG_CONFIG_PATH=/opt/software/*/lib/pkgconfig:/opt/software/*/*/lib/pkgconfig:${PKG_CONFIG_PATH}
+#export CPATH=/opt/software/*/include:/opt/software/*/*/include:${CPATH}
+#ENVIRONMENT
+#
+#chmod 644 {install_prefix}/environment.sh
+#
+#echo "source {install_prefix}/environment.sh" >> /etc/bash.bashrc
 
 EOF
 

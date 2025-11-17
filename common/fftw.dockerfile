@@ -13,47 +13,51 @@ tar xf fftw-${FFTW_VERSION}.tar.gz
 cd fftw-${FFTW_VERSION}
 
 # Common configure flags for optimization
-COMMON_FLAGS="--enable-shared --enable-threads --enable-sse2 --enable-avx --enable-avx2 --enable-avx512 --enable-avx-128-fma --enable-kcvi --enable-altivec --enable-vsx --enable-generic-simd128 --enable-generic-simd256"
-FLAGS_SINGLE="--enable-float --enable-sse --enable-kcvi --enable-altivec"
+COMMON_FLAGS="--enable-shared --enable-threads --enable-sse2 --enable-avx --enable-avx2 --enable-avx512 --enable-avx-128-fma --enable-generic-simd128 --enable-generic-simd256"
+FLAGS_SINGLE="--enable-float"
 FLAGS_DOUBLE=""
 
+BUILD_FLAGS_C="{build_flags_c}"
+BUILD_FLAGS_F="{build_flags_f}"
+
+
 # Build 1: Double precision without MPI
-./configure ${COMMON_FLAGS} ${FLAGS_DOUBLE} --prefix=${FFTW_PREFIX}/double
+./configure ${COMMON_FLAGS} ${FLAGS_DOUBLE} \
+   --prefix=${FFTW_PREFIX}/double \
+   CFLAGS="${BUILD_FLAGS_C}" \
+   FFLAGS="${BUILD_FLAGS_F}"
 make -j{build_threads}
 make install
 make clean
 
 # Build 2: Single precision without MPI
-./configure ${COMMON_FLAGS} ${FLAGS_SINGLE} --prefix=${FFTW_PREFIX}/single
+./configure ${COMMON_FLAGS} ${FLAGS_SINGLE} \
+   --prefix=${FFTW_PREFIX}/single \
+   CFLAGS="${BUILD_FLAGS_C}" \
+   FFLAGS="${BUILD_FLAGS_F}"
 make -j{build_threads}
 make install
 make clean
 
 # Build 3: Double precision with MPI
-./configure ${COMMON_FLAGS} ${FLAGS_DOUBLE} --enable-mpi --prefix=${FFTW_PREFIX}/double-mpi
+./configure ${COMMON_FLAGS} ${FLAGS_DOUBLE} --enable-mpi \
+   --prefix=${FFTW_PREFIX}/double-mpi \
+   CFLAGS="${BUILD_FLAGS_C}" \
+   FFLAGS="${BUILD_FLAGS_F}"
 make -j{build_threads}
 make install
 make clean
 
 # Build 4: Single precision with MPI
-./configure ${COMMON_FLAGS} ${FLAGS_SINGLE} --enable-mpi --prefix=${FFTW_PREFIX}/single-mpi
+./configure ${COMMON_FLAGS} ${FLAGS_SINGLE} --enable-mpi \
+   --prefix=${FFTW_PREFIX}/single-mpi \
+   CFLAGS="${BUILD_FLAGS_C}" \
+   FFLAGS="${BUILD_FLAGS_F}"
 make -j{build_threads}
 make install
 make clean
 
-cat > /etc/profile.d/fftw.sh << 'SOFTWARE_PATHS'
-export FFTW_HOME=/opt/software/fftw-3.3.10
-export FFTW_DOUBLE_DIR=${FFTW_HOME}/double
-export FFTW_SINGLE_DIR=${FFTW_HOME}/single
-export FFTW_DOUBLE_MPI_DIR=${FFTW_HOME}/double-mpi
-export FFTW_SINGLE_MPI_DIR=${FFTW_HOME}/single-mpi
-
-# For Fortran code
-export FFTW_INCLUDE_DIR=${FFTW_DOUBLE_DIR}/include
-export FFTW_LIB_DIR=${FFTW_DOUBLE_DIR}/lib
-SOFTWARE_PATHS
-
-chmod 644 /etc/profile.d/fftw.sh
+ln -sf ${FFTW_PREFIX} {install_prefix}/fftw-default
 
 # Cleanup
 cd /tmp
@@ -66,4 +70,14 @@ echo "  - ${FFTW_PREFIX}/single (single precision, no MPI)"
 echo "  - ${FFTW_PREFIX}/double-mpi (double precision, MPI)"
 echo "  - ${FFTW_PREFIX}/single-mpi (single precision, MPI)"
 EOF
+
+ENV FFTW_HOME={install_prefix}/fftw-{version}
+ENV FFTW_DOUBLE_DIR=${FFTW_HOME}/double
+ENV FFTW_SINGLE_DIR=${FFTW_HOME}/single
+ENV FFTW_DOUBLE_MPI_DIR=${FFTW_HOME}/double-mpi
+ENV FFTW_SINGLE_MPI_DIR=${FFTW_HOME}/single-mpi
+
+# For Fortran code
+ENV FFTW_INCLUDE_DIR=${FFTW_DOUBLE_DIR}/include
+ENV FFTW_LIB_DIR=${FFTW_DOUBLE_DIR}/lib
 

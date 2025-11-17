@@ -1,63 +1,46 @@
 USER root
 
-# ScaLAPACK {version} module - Distributed linear algebra
-RUN <<'EOF' bash
+# common/scalapack.dockerfile
+RUN <<'EOF'
 set -euxo pipefail
 
-# Install dependencies
 apt-get update
-apt-get install \
+apt-get install -y \
     build-essential \
     gfortran \
-    wget
+    wget \
+    cmake
 
-# Set paths
 SCALAPACK_PREFIX={install_prefix}/scalapack-{version}
 SCALAPACK_VERSION={version}
-OPENBLAS_PREFIX={install_prefix}/openblas-default
 
-# Download
 cd /tmp
-wget http://www.netlib.org/scalapack/scalapack-${SCALAPACK_VERSION}.tgz
-tar xf scalapack-${SCALAPACK_VERSION}.tgz
+wget https://github.com/Reference-ScaLAPACK/scalapack/archive/refs/tags/v${SCALAPACK_VERSION}.tar.gz
+tar xf v${SCALAPACK_VERSION}.tar.gz
 cd scalapack-${SCALAPACK_VERSION}
 
-# Create SLmake.inc for ScaLAPACK
-cat > SLmake.inc <<'SCALAPACK_CONF'
-CDEFS         = -DAdd_
-FC            = mpif90
-CC            = mpicc
-FCFLAGS       = -O3 -march=native
-CCFLAGS       = -O3 -march=native
-FCLOADER      = mpif90
-CCLOADER      = mpicc
-FCLOADFLAGS   = -O3 -march=native
-CCLOADFLAGS   = -O3 -march=native
+mkdir build
+cd build
 
-BLASLIB       = -L{install_prefix}/openblas-default/lib -lopenblas
-LAPACKLIB     = 
+# CMake build is more robust
+cmake .. \
+    -DCMAKE_INSTALL_PREFIX=${SCALAPACK_PREFIX} \
+    -DCMAKE_Fortran_COMPILER=mpif90 \
+    -DCMAKE_C_COMPILER=mpicc \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_Fortran_FLAGS="{build_flags_f}" \
+    -DCMAKE_C_FLAGS="{build_flags_c}" \
+    -DBLAS_LIBRARIES="-L{install_prefix}/openblas-default/lib -lopenblas" \
+    -DLAPACK_FOUND=ON
 
-LIBS          = $(LAPACKLIB) $(BLASLIB)
-
-SCALAPACK_VERSION = {version}
-SCALAPACK_CONF
-
-# Build
 make -j{build_threads}
+make install
 
-# Install
-mkdir -p ${SCALAPACK_PREFIX}/lib
-cp libscalapack.a ${SCALAPACK_PREFIX}/lib/
-mkdir -p ${SCALAPACK_PREFIX}/include
-
-# Create symlink
 ln -sf ${SCALAPACK_PREFIX} {install_prefix}/scalapack-default
 
-# Cleanup
 cd /tmp
 rm -rf scalapack-${SCALAPACK_VERSION}*
 
-echo "ScaLAPACK {version} installed successfully"
+echo "✓ ScaLAPACK {version} built and installed"
 EOF
 
-USER ubuntu

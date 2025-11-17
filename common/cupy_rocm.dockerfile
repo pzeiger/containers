@@ -11,15 +11,14 @@ apt-get install -y \
 
 # Set versions
 CUPY_VERSION={version}
-ROCM_PATH=/opt/rocm  # ROCm should already be installed
 
 # Install CuPy with ROCm support via pip
-export HCC_HOME=${ROCM_PATH}
-export ROCM_HOME=${ROCM_PATH}
-export PATH=${ROCM_PATH}/bin:${PATH}
+export CUPY_INSTALL_USE_HIP=1
+export HCC_AMDGPU_TARGET={rocm_arch}
+export ROCM_HOME=/opt/rocm  # ROCm should already be installed
 
 # Install CuPy built for HIP/ROCm
-pip install cupy-hip>={CUPY_VERSION}
+pip install cupy>={CUPY_VERSION}
 
 echo "CuPy {version} with ROCm installed successfully"
 python3 -c "import cupy; print(f'CuPy version: {cupy.__version__}')"

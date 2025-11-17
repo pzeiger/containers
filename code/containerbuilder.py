@@ -125,6 +125,10 @@ class ContainerBuilder:
                     lines.append(module_content)
                     lines.append("")
                     
+                    # We always switch to an unprivileged user and cd to their home
+                    lines.append("USER ubuntu")
+                    lines.append("WORKDIR /home/ubuntu")
+                    
                 except FileNotFoundError as e:
                     print(f"  Warning: {e}")
                     continue
@@ -189,9 +193,6 @@ class ContainerBuilder:
                     lines.extend(processed_lines)
                     lines.append("")
 
-                    # We always switch to an unprivileged user and cd to their home
-                    lines.append("USER ubuntu")
-                    lines.append("WORKDIR /home/ubuntu")
                     
                 except FileNotFoundError as e:
                     print(f"  Warning: {e}")
