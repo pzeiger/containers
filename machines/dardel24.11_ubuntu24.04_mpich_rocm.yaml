@@ -1,5 +1,6 @@
 machine_name: dardel24.11
-container_type: apptainer
+#container_type: apptainer
+container_type: docker
 base_image: ubuntu:24.04
 
 # Build arguments
@@ -7,18 +8,24 @@ build_args:
   maintainer: paul.zeiger@physics.uu.se
   description: "Container for Dardel with ROCm support"
 
-# Environment variables
+# Permanent environment variables
 environment_vars:
+
+# Variables for installation
+install_vars:
+  install_prefix: '/opt/software'
+  rocm_arch: 'gfx90a'
+  
 
 # Software modules to install
 modules:
   - name: base_tools
     enabled: true
-    
+  
   - name: python
     version: '3.12'
     enabled: true
-    
+  
   - name: rocm
     version: '6.3.4'
     enabled: true
@@ -26,4 +33,30 @@ modules:
   - name: mpich
     version: '4.3.1'
     enabled: true
+
+  - name: openblas
+    version: '0.3.30'
+    enabled: true
+
+  - name: scalapack
+    version: '2.2.0'
+    enabled: true
+  
+  - name: fftw
+    version: '3.3.10'
+    enabled: true
+  
+  - name: libxc
+    version: '7.0.0'
+    enabled: true
+  
+  - name: cupy
+    version: '13.6.0'
+    enabled: true
+
+
+#  - name: gpaw
+#    version: '25.7.0'
+#    enabled: true
+
 
