@@ -51,3 +51,7 @@ rm -rf libxc-${LIBXC_VERSION}*
 echo "libxc {version} installed successfully"
 EOF
 
+ENV LIBXC_HOME={install_prefix}/libxc-default
+ENV LIBXC_INCLUDE_DIR={install_prefix}/libxc-default/include
+ENV LIBXC_LIBS_DIR={install_prefix}/libxc-default/lib
+ENV LD_LIBRARY_PATH=${LIBXC_LIBS_DIR}:${LD_LIBRARY_PATH:-}

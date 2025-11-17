@@ -1,12 +1,12 @@
-machine_name: dardel24.11
+machine_name: workstation
 #container_type: apptainer
 container_type: docker
-base_image: ubuntu:24.04
+base_image: rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
 
 # Build arguments
 build_args:
   maintainer: paul.zeiger@physics.uu.se
-  description: "Container for Dardel with ROCm support"
+  description: "Container for workstation use with ROCm support"
 
 # Permanent environment variables
 environment_vars:
@@ -14,41 +14,19 @@ environment_vars:
 # Variables for installation
 install_vars:
   install_prefix: '/opt/software'
-  rocm_arch: 'gfx90a'
-  build_flags_c: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
-  build_flags_f: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
-  build_flags_cxx: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
+  rocm_arch: 'gfx1151'
+  build_flags_c: "-O3 -march=native -mtune=native -mfma -mavx2"
+  build_flags_f: "-O3 -march=native -mtune=native -mfma -mavx2"
+  build_flags_cxx: "-O3 -march=native -mtune=native -mfma -mavx2"
   
 
 # Software modules to install
 modules:
-  - name: base_tools
+  - name: base_workstation
     enabled: true
   
   - name: python
     version: '3.12'
-    enabled: true
-  
-  - name: rocm
-    version: '6.3.4'
-    enabled: true
-    
-  - name: mpich
-    version: '4.3.1'
-    enabled: true
-  
-  - name: fftw
-    version: '3.3.10'
-    enabled: true
-
-  - name: openblas
-    version: '0.3.30'
-    enabled: true
-    install_vars:
-      openblas_target: 'ZEN'
-
-  - name: scalapack
-    version: '2.2.2'
     enabled: true
   
   - name: libxc
@@ -72,4 +50,7 @@ modules:
     enabled: true
   
   - name: python-packages
+    enabled: true
+  
+  - name: cleanup
     enabled: true

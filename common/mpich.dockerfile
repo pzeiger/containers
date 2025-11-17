@@ -57,7 +57,7 @@ EOF
 
 ENV MPICH_HOME={install_prefix}/mpich-default
 ENV PATH={install_prefix}/mpich-default/bin:${PATH}
-ENV LD_LIBRARY_PATH={install_prefix}/mpich-default/lib:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH={install_prefix}/mpich-default/lib:${LD_LIBRARY_PATH:-}
 
 
 USER ubuntu
@@ -69,9 +69,4 @@ rm hello_world_mpi.c
 ./hello_world_mpi
 
 EOF
-
-
-
-#ENV PATH=$PATH:/opt/mpich-$MPICH_VERSION/bin
-#ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mpich-$MPICH_VERSION/lib
 

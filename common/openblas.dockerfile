@@ -60,5 +60,8 @@ rm -rf OpenBLAS-${OPENBLAS_VERSION}*
 echo "OpenBLAS {version} installed successfully"
 EOF
 
-ENV OPENBLAS_HOME={install_prefix}/openblas-default
-ENV LD_LIBRARY_PATH={install_prefix}/openblas-default/lib:${LD_LIBRARY_PATH}
+ENV LIBOPENBLAS_HOME={install_prefix}/openblas-default
+ENV LIBOPENBLAS_LIBS_DIR=${LIBOPENBLAS_HOME}/lib
+ENV LIBOPENBLAS_INCLUDE_DIR=${LIBOPENBLAS_HOME}/include
+ENV LD_LIBRARY_PATH=${LIBOPENBLAS_LIBS_DIR}:${LD_LIBRARY_PATH:-}
+

@@ -24,15 +24,16 @@ cd build
 # CMake build is more robust
 cmake .. \
     -DCMAKE_INSTALL_PREFIX=${SCALAPACK_PREFIX} \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_Fortran_COMPILER=mpif90 \
     -DCMAKE_C_COMPILER=mpicc \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_Fortran_FLAGS="{build_flags_f}" \
-    -DCMAKE_C_FLAGS="{build_flags_c}" \
-    -DBLAS_LIBRARIES="-L${OPENBLAS_HOME}/lib -lopenblas" \
+    -DCMAKE_Fortran_FLAGS="{build_flags_f} -fPIC" \
+    -DCMAKE_C_FLAGS="{build_flags_c} -fPIC" \
+    -DBLAS_LIBRARIES="-L${LIBOPENBLAS_LIBS_DIR} -lopenblas" \
     -DLAPACK_FOUND=ON
 
-make -j{build_threads}
+cmake --build . -j{build_threads} --verbose
 make install
 
 ln -sf ${SCALAPACK_PREFIX} {install_prefix}/scalapack-default
@@ -43,3 +44,6 @@ rm -rf scalapack-${SCALAPACK_VERSION}*
 echo "✓ ScaLAPACK {version} built and installed"
 EOF
 
+ENV LIBSCALAPACK_HOME={install_prefix}/scalapack-default
+ENV LIBSCALAPACK_LIBS_DIR=${LIBSCALAPACK_HOME}/lib
+ENV LIBSCALAPACK_INCLUDE_DIR=${LIBSCALAPACK_HOME}/include

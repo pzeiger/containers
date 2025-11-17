@@ -23,7 +23,7 @@ pip install cupy>={CUPY_VERSION}
 
 echo "CuPy {version} with ROCm installed successfully"
 python3 -c "import cupy; print(f'CuPy version: {cupy.__version__}')"
-python3 -c "import cupy; print(f'Device: {cupy.cuda.Device()}')"
+#python3 -c "import cupy; print(f'Device: {cupy.cuda.Device()}')"
 EOF
 
 
