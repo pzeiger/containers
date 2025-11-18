@@ -3,43 +3,6 @@ RUN usermod -a -G video ubuntu # Add the current user to the video group
 
 ENV ROCM_VERSION={version}
 
-#RUN <<'EOF'
-#
-## Make the directory if it doesn't exist yet.
-## This location is recommended by the distribution maintainers.
-#mkdir --parents --mode=0755 /etc/apt/keyrings
-#
-#. /etc/os-release
-#read _ UBUNTU_VERSION_NAME <<< "$VERSION"
-#echo "$UBUNTU_VERSION_NAME"
-#UBUNTU_VERSION_NAME=${UBUNTU_VERSION_NAME//[()]/}
-#UBUNTU_VERSION_NAME=(${UBUNTU_VERSION_NAME})
-#UBUNTU_VERSION_NAME=${UBUNTU_VERSION_NAME[1]}
-#UBUNTU_VERSION_NAME=${UBUNTU_VERSION_NAME,,}
-#echo "$UBUNTU_VERSION_NAME"
-#
-#
-## Download the key, convert the signing-key to a full
-## keyring required by apt and store in the keyring directory
-#wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | \
-#gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null
-#
-#tee --append /etc/apt/sources.list.d/rocm.list << INNER_EOF
-#deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/$ROCM_VERSION $UBUNTU_VERSION_NAME main
-#INNER_EOF
-#
-#
-#tee /etc/apt/preferences.d/rocm-pin-600 << INNER_EOF
-#Package: *
-#Pin: release o=repo.radeon.com
-#Pin-Priority: 600
-#INNER_EOF
-#
-#apt-get update
-#apt-get install rocm$ROCM_VERSION
-#EOF
-
-
 RUN <<'EOF'
 . /etc/os-release
 read _ UBUNTU_VERSION_NAME <<< "$VERSION"

@@ -3,28 +3,20 @@ USER root
 # OpenBLAS {version} module - Optimized linear algebra library
 RUN <<'EOF'
 
-# Install dependencies
-apt-get update
-apt-get install \
-    build-essential \
-    gfortran \
-    libgomp1 \
-    wget
-
 # Set installation prefix
 OPENBLAS_PREFIX={install_prefix}/openblas-{version}
 OPENBLAS_VERSION={version}
 
 # Compilation flags (can be overridden via YAML variables)
-OPENBLAS_CFLAGS="{build_flags_c}"
-OPENBLAS_FFLAGS="{build_flags_f}"
-OPENBLAS_CXXFLAGS="{build_flags_cxx}"
+export CFLAGS="{build_flags_c}"
+export FFLAGS="{build_flags_f}"
+export CXXFLAGS="{build_flags_cxx}"
 OPENBLAS_TARGET="{openblas_target}"
 
 # Build with configurable flags
 echo "Building OpenBLAS with:"
-echo "  CFLAGS: ${OPENBLAS_CFLAGS}"
-echo "  FFLAGS: ${OPENBLAS_FFLAGS}"
+echo "  CFLAGS: ${CFLAGS}"
+echo "  FFLAGS: ${FFLAGS}"
 echo "  TARGET: ${OPENBLAS_TARGET}"
 
 # Download and extract
@@ -42,10 +34,7 @@ make -j{build_threads} \
     DYNAMIC_ARCH=1 \
     NUM_THREADS=64 \
     NO_STATIC=1 \
-    TARGET=${OPENBLAS_TARGET} \
-    CFLAGS="${OPENBLAS_CFLAGS}" \
-    FFLAGS="${OPENBLAS_FFLAGS}" \
-    CXXFLAGS="${OPENBLAS_CXXFLAGS}"
+    TARGET=${OPENBLAS_TARGET}
 
 # Install
 make install PREFIX=${OPENBLAS_PREFIX}

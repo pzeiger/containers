@@ -1,8 +1,5 @@
-# Copy uv into image
+USER root
 RUN << 'EOF'
-pip install --no-cache-dir phonopy seekpath pymatgen wannierberri calorine dynasor hiphive
+pip install phonopy seekpath pymatgen wannierberri calorine dynasor hiphive
 EOF
-
-
-
 

@@ -3,14 +3,6 @@ USER root
 # libxc {version} module - DFT exchange-correlation functionals library
 RUN <<'EOF'
 
-# Install dependencies
-apt-get update
-apt-get install \
-    build-essential \
-    gfortran \
-    wget \
-    pkg-config
-
 # Set installation prefix
 LIBXC_PREFIX={install_prefix}/libxc-{version}
 LIBXC_VERSION={version}
@@ -21,17 +13,15 @@ wget https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VER
 tar xf libxc-${LIBXC_VERSION}.tar.gz
 cd libxc-${LIBXC_VERSION}
 
-BUILD_FLAGS_C="{build_flags_c}"
-BUILD_FLAGS_F="{build_flags_f}"
+export CFLAGS="{build_flags_c}"
+export FFLAGS="{build_flags_f}"
 
 # Configure with optimizations
 autoreconf -i
 ./configure --prefix=${LIBXC_PREFIX} \
     --enable-shared \
     --disable-static \
-    --enable-fortran \
-    CFLAGS="${BUILD_FLAGS_C}" \
-    FFLAGS="${BUILD_FLAGS_F}"
+    --enable-fortran
 
 # Build and install
 make -j{build_threads}

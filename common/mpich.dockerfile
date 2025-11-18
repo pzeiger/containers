@@ -3,15 +3,6 @@ USER root
 # MPICH {version} module - Message Passing Interface implementation
 RUN <<'EOF'
 
-# Install dependencies
-apt-get update
-apt-get install \
-    build-essential \
-    gfortran \
-    wget \
-    libhwloc-dev \
-    libxml2-dev
-
 # Set installation prefix
 MPICH_PREFIX={install_prefix}/mpich-{version}
 MPICH_VERSION={version}
@@ -22,6 +13,10 @@ wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSIO
 tar xf mpich-${MPICH_VERSION}.tar.gz
 cd mpich-${MPICH_VERSION}
 
+export CFLAGS="{build_flags_c}"
+export CXXFLAGS="{build_flags_cxx}"
+export FFLAGS="{build_flags_f}"
+
 # Configure with optimizations
 ./configure --prefix=${MPICH_PREFIX} \
     --enable-fast=O3 \
@@ -29,11 +24,7 @@ cd mpich-${MPICH_VERSION}
     --disable-static \
     --with-device=ch3:nemesis \
     --enable-fortran=all \
-    --enable-cxx \
-    CFLAGS="-O3 -march=native" \
-    CXXFLAGS="-O3 -march=native" \
-    FFLAGS="-O3 -march=native" \
-    FCFLAGS="-O3 -march=native"
+    --enable-cxx
 
 # Build and install
 make -j{build_threads}

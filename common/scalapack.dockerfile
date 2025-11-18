@@ -3,13 +3,6 @@ USER root
 # common/scalapack.dockerfile
 RUN <<'EOF'
 
-apt-get update
-apt-get install -y \
-    build-essential \
-    gfortran \
-    wget \
-    cmake
-
 SCALAPACK_PREFIX={install_prefix}/scalapack-{version}
 SCALAPACK_VERSION={version}
 
@@ -30,8 +23,7 @@ cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_Fortran_FLAGS="{build_flags_f} -fPIC" \
     -DCMAKE_C_FLAGS="{build_flags_c} -fPIC" \
-    -DBLAS_LIBRARIES="-L${LIBOPENBLAS_LIBS_DIR} -lopenblas" \
-    -DLAPACK_FOUND=ON
+    -DBLAS_LIBRARIES="-L${LIBOPENBLAS_LIBS_DIR} -lopenblas"
 
 cmake --build . -j{build_threads} --verbose
 make install

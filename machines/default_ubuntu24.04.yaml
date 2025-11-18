@@ -1,7 +1,8 @@
-machine_name: workstation
+machine_name: default_ubuntu24.04
 #container_type: apptainer
 container_type: docker
-base_image: rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
+#base_image: rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
+base_image: rocm/dev-ubuntu-24.04:6.4.4-complete
 
 # Build arguments
 build_args:
@@ -15,9 +16,9 @@ environment_vars:
 install_vars:
   install_prefix: '/opt/software'
   rocm_arch: 'gfx1151'
-  build_flags_c: "-O3 -march=native -mtune=native -mfma -mavx2"
-  build_flags_f: "-O3 -march=native -mtune=native -mfma -mavx2"
-  build_flags_cxx: "-O3 -march=native -mtune=native -mfma -mavx2"
+  build_flags_c: "-O3 -march=native -mtune=native"
+  build_flags_f: "-O3 -march=native -mtune=native"
+  build_flags_cxx: "-O3 -march=native -mtune=native"
   
 
 # Software modules to install
@@ -43,6 +44,9 @@ modules:
 
   - name: abtem
     version: 'git'
+    enabled: true
+  
+  - name: mpi4py
     enabled: true
   
   - name: gpaw

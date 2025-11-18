@@ -15,14 +15,14 @@ environment_vars:
 install_vars:
   install_prefix: '/opt/software'
   rocm_arch: 'gfx90a'
-  build_flags_c: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
-  build_flags_f: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
-  build_flags_cxx: "-O3 -march=znver3 -mtune=znver3 -mfma -mavx2"
+  build_flags_c: "-O3 -march=znver3 -mtune=znver3"
+  build_flags_f: "-O3 -march=znver3 -mtune=znver3"
+  build_flags_cxx: "-O3 -march=znver3 -mtune=znver3"
   
 
 # Software modules to install
 modules:
-  - name: base_tools
+  - name: base_cluster
     enabled: true
   
   - name: python
@@ -39,6 +39,8 @@ modules:
   
   - name: fftw
     version: '3.3.10'
+    build_flags_c: "-mtune=znver3 -march=znver3 -fPIC"
+    build_flags_f: "-mtune=znver3 -march=znver3 -fPIC"
     enabled: true
 
   - name: openblas
@@ -67,9 +69,12 @@ modules:
     version: 'git'
     enabled: true
   
+  - name: mpi4py
+    enabled: true
+  
   - name: gpaw
     version: '25.7.0'
     enabled: true
   
   - name: python-packages
-    enabled: true
+    enabled: false

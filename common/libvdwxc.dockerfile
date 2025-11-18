@@ -3,14 +3,6 @@ USER root
 # common/libvdwxc.dockerfile
 RUN <<'EOF'
 
-# Install build dependencies
-apt-get update
-apt-get install \
-    build-essential \
-    cmake \
-    wget \
-    pkg-config
-
 # Set installation prefix
 LIBVDWXC_VERSION={version}
 LIBVDWXC_PREFIX={install_prefix}/libvdwxc-${LIBVDWXC_VERSION}
@@ -27,17 +19,21 @@ sh autogen.sh
 autoreconf -i
 mkdir build && cd build
 
-tail -f config.log &
+export CFLAGS="{build_flags_c}"
+export FFLAGS="{build_flags_f}"
+BUILD_FFTW3_INCLUDES="${FFTW_INCLUDE_DIR:-}"
+BUILD_FFTW3_LIBS="${FFTW_LIBS_DIR:-}"
 
-BUILD_FLAGS_C="{build_flags_c}"
-BUILD_FLAGS_F="{build_flags_f}"
-
-../configure --prefix=${LIBVDWXC_PREFIX} \
-    CC="mpicc" FC="mpif90" \
-    FFTW3_INCLUDES="-I${FFTW_DOUBLE_MPI_INCLUDE_DIR}" \
-    FFTW3_LIBS="-L${FFTW_DOUBLE_MPI_LIBS_DIR} -lfftw3 -lfftw3_mpi" \
-    CFLAGS="${BUILD_FLAGS_C}" \
-    FFLAGS="${BUILD_FLAGS_F}"
+if [ -z "$BUILD_FFTW3_INCLUDES" ] || [ -z "$BUILD_FFTW3_LIBS" ]; then
+    ../configure --prefix=${LIBVDWXC_PREFIX} \
+        CC="mpicc" FC="mpif90" \
+	--with-fftw3
+else
+    ../configure --prefix=${LIBVDWXC_PREFIX} \
+        CC="mpicc" FC="mpif90" \
+        FFTW3_INCLUDES="-I${BUILD_FFTW3_INCLUDES}" \
+        FFTW3_LIBS="-L${BUILD_FFTW3_LIBS} -lfftw3 -lfftw3_mpi"
+fi
 make -j{build_threads}
 make check
 make install
