@@ -15,8 +15,8 @@ XC_LIBS="${LIBXC_LIBS_DIR:-/usr/lib/x86_64-linux-gnu}"
 VDWXC_INCLUDES="${LIBVDWXC_INCLUDE_DIR:-/usr/include}"
 VDWXC_LIBS="${LIBVDWXC_LIBS_DIR:-/usr/lib/x86_64-linux-gnu}"
 
-FFTW_LIBS="${FFTW_DOUBLE_MPI_LIBS_DIR:-}"
-FFTW_INCLUDES="${FFTW_DOUBLE_MPI_INCLUDE_DIR:-}"
+FFTW_LIBS="${FFTW_DOUBLE_MPI_LIBS_DIR:-/usr/include}"
+FFTW_INCLUDES="${FFTW_DOUBLE_MPI_INCLUDE_DIR:-/usr/lib/x86_64-linux-gnu}"
 
 GPAW_VERSION="{version}"
 GPAW_PREFIX="{install_prefix}/gpaw-{version}"
@@ -29,6 +29,7 @@ mkdir -p ${GPAW_CONFIG_DIR}
 
 tee ${GPAW_CONFIG} << INNER_EOF
 
+from pathlib import Path
 
 mpi = True
 if mpi:
@@ -43,9 +44,12 @@ if '-fopenmp' not in extra_link_args:
 print(extra_compile_args)
 print(extra_link_args)
 
-#extra_compile_args += ['{build_flags_c}']
-#extra_link_args += ['{build_flags_c}']
+build_flags = '{build_flags_c}'
 
+for x in build_flags.strip(' ').split('-')[1:]:
+    flag = '-' + x.strip()
+    extra_compile_args += [flag]
+    extra_link_args += [flag]
 
 my_includes = [
     '${OPENBLAS_INCLUDES}',
@@ -64,55 +68,56 @@ my_libs = [
 ]
 
 for minc in my_includes:
-    if minc not in include_dirs:
+    if minc not in include_dirs and minc != '':
         include_dirs += [minc]
 
 for mlib in my_libs:
-    if mlib not in library_dirs:
+    if mlib not in library_dirs and mlib != '':
         library_dirs += [mlib]
 
-    if mlib not in runtime_library_dirs:
+    if mlib not in runtime_library_dirs and mlib != '':
         runtime_library_dirs += [mlib]
 
-scalapack = True
-#include_dirs += ['${SCALAPACK_INCLUDES}']
-#library_dirs += ['${SCALAPACK_LIBS}']
-#runtime_library_dirs += ['${SCALAPACK_LIBS}']
+###################
+# SCALAPACK
+###################
 if 'scalapack' not in libraries:
-    libraries += ['scalapack']
+    tmpdir = Path('/usr/lib/x86_64-linux-gnu')
+    if (tmpdir / 'libscalapack.so').exists():
+        scalapack = True
+        libraries += ['scalapack']
+    elif (tmpdir / 'libscalapack-mpi.so').exists():
+        scalapack = True
+        libraries += ['scalapack-mpi']
 
-#include_dirs += ['${OPENBLAS_INCLUDES}']
-#library_dirs += ['${OPENBLAS_LIBS}']
-#runtime_library_dirs += ['${OPENBLAS_LIBS}']
 if 'openblas' not in libraries:
     libraries += ['openblas']
 
 if 1:
     libxc = True
-#    include_dirs += ['${XC_INCLUDES}']
-#    library_dirs += ['${XC_LIBS}']
-    # You can use rpath to avoid changing LD_LIBRARY_PATH:
-#    runtime_library_dirs += ['${XC_LIBS}']
     if 'xc' not in libraries:
         libraries += ['xc']
 
 if 1:
     libvdwxc = True
-#    library_dirs += ['${VDWXC_LIBS}']
-#    include_dirs += ['${VDWXC_INCLUDES}']
-#    runtime_library_dirs += ['${VDWXC_LIBS}']
     if 'vdwxc' not in libraries:
     	libraries += ['vdwxc']
 
-
+###################
+# FFTW3
+###################
 if 1:
-    fftw = True
-#    library_dirs += ['${FFTW_LIBS}']
-#    include_dirs += ['${FFTW_INCLUDES}']
-#    runtime_library_dirs += ['${FFTW_LIBS}']
+    tmpdir = Path('/usr/include')
     if 'fftw3' not in libraries:
-        libraries += ['fftw3']
-#        libraries += ['fftw3_mpi']
+        if (tmpdir / 'libfftw3.so').exists():
+            fftw = True
+            libraries += ['fftw3']
+    
+    if 'fftw3' not in libraries:
+        if (tmpdir / 'libfftw3_mpi.so').exists():
+            fftw = True
+            libraries += ['fftw3_mpi']
+
 
 # hip
 if 0:
@@ -141,17 +146,17 @@ EOF
 
 
 
-#USER ubuntu
-#WORKDIR /home/ubuntu
-#
-#RUN << 'EOF'
-#ldd /usr/local/lib/python3.12/dist-packages/_gpaw.cpython-312-x86_64-linux-gnu.so
-#gpaw info
-#gpaw test
-#gpaw -P 4 test
-#
-#
-#
-#EOF
+USER ubuntu
+WORKDIR /home/ubuntu
+
+RUN << 'EOF'
+ldd /usr/local/lib/python3.12/dist-packages/_gpaw.cpython-312-x86_64-linux-gnu.so
+gpaw info
+gpaw test
+gpaw -P 4 test
+
+
+
+EOF
 
 

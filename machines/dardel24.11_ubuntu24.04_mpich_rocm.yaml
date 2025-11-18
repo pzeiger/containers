@@ -77,4 +77,7 @@ modules:
     enabled: true
   
   - name: python-packages
-    enabled: false
+    enabled: true
+  
+  - name: cleanup
+    enabled: true
