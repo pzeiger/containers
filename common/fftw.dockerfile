@@ -17,8 +17,8 @@ COMMON_FLAGS="--enable-shared --enable-threads --enable-sse2 --enable-avx --enab
 FLAGS_SINGLE="--enable-float"
 FLAGS_DOUBLE=""
 
-#export CFLAGS="{build_flags_c}"
-#export FFLAGS="{build_flags_f}"
+export CFLAGS="{build_flags_c}"
+export FFLAGS="{build_flags_f}"
 
 # Build 3: Double precision with MPI
 ./configure ${COMMON_FLAGS} ${FLAGS_DOUBLE} --enable-mpi \

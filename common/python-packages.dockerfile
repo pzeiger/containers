@@ -1,5 +1,15 @@
 USER root
 RUN << 'EOF'
-pip install phonopy seekpath pymatgen wannierberri calorine dynasor hiphive
+pip install \
+    phonopy \
+    seekpath \
+    pymatgen \
+    wannierberri \
+    calorine \
+    dynasor \
+    hiphive \
+    ipython \
+    ipympl
+
 EOF
 

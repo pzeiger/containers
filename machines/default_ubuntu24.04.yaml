@@ -7,18 +7,19 @@ base_image: rocm/dev-ubuntu-24.04:6.4.4-complete
 # Build arguments
 build_args:
   maintainer: paul.zeiger@physics.uu.se
-  description: "Container for workstation use with ROCm support"
+  description: Container for workstation use with ROCm support
 
 # Permanent environment variables
 environment_vars:
+  workdir: /workspace
 
 # Variables for installation
 install_vars:
-  install_prefix: '/opt/software'
-  rocm_arch: 'gfx1151'
-  build_flags_c: "-O3 -march=native -mtune=native"
-  build_flags_f: "-O3 -march=native -mtune=native"
-  build_flags_cxx: "-O3 -march=native -mtune=native"
+  install_prefix: /opt/software
+  rocm_arch: gfx1151
+  build_flags_c: -O3 -march=native -mtune=native
+  build_flags_f: -O3 -march=native -mtune=native
+  build_flags_cxx: -O3 -march=native -mtune=native
   
 
 # Software modules to install
@@ -27,34 +28,35 @@ modules:
     enabled: true
   
   - name: python
-    version: '3.12'
+    version: 3.12
     enabled: true
   
   - name: libxc
-    version: '7.0.0'
+    version: 7.0.0
     enabled: true
   
   - name: libvdwxc
-    version: '0.5.0'
+    version: 0.5.0
     enabled: True
 
   - name: cupy_rocm
-    version: '13.6.0'
+    version: 13.6.0
     enabled: true
 
   - name: abtem
-    version: 'git'
+    version: git
     enabled: true
   
   - name: mpi4py
     enabled: true
   
   - name: gpaw
-    version: '25.7.0'
+    version: 25.7.0
     enabled: true
   
   - name: python-packages
     enabled: true
   
-  - name: cleanup
+  - name: jupyter
     enabled: true
+  

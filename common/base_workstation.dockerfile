@@ -32,6 +32,7 @@ apt-get install \
     libfftw3-mpi-dev \
     libscalapack-mpi-dev \
     libhdf5-dev \
+    python3-tk
 
 
 ## Create environment paths script

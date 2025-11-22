@@ -127,7 +127,7 @@ class ContainerBuilder:
                     
                     # We always switch to an unprivileged user and cd to their home
                     lines.append("USER ubuntu")
-                    lines.append("WORKDIR /home/ubuntu")
+                    lines.append(f"WORKDIR {config['environment_vars']['workdir']}")
                     
                 except FileNotFoundError as e:
                     print(f"  Warning: {e}")
@@ -136,8 +136,9 @@ class ContainerBuilder:
         # Final cleanup
         lines.append("# Final cleanup")
         lines.append("USER root")
-        lines.append("RUN apt-get clean && rm -rf /var/lib/apt/lists/*")
+        lines.append("RUN apt-get clean && rm -rf /var/lib/apt/lists/* && pip cache purge && rm -r /tmp/*")
         lines.append("USER ubuntu")
+        lines.append(f"WORKDIR {config['environment_vars']['workdir']}")
         lines.append("")
         
         return "\n".join(lines)
@@ -155,9 +156,6 @@ class ContainerBuilder:
         lines.append("%post")
         lines.append(f"    # Generated for {config.get('machine_name', 'unknown')}")
         lines.append(f"    # Generated on: {datetime.now().isoformat()}")
-        lines.append("")
-        lines.append("USER ubuntu")
-        lines.append("WORKDIR /home/ubuntu")
         lines.append("")
         
         # Process modules

@@ -10,6 +10,7 @@ build_args:
 
 # Permanent environment variables
 environment_vars:
+  workdir: /workspace
 
 # Variables for installation
 install_vars:
@@ -39,8 +40,8 @@ modules:
   
   - name: fftw
     version: '3.3.10'
-    build_flags_c: "-mtune=znver3 -march=znver3 -fPIC"
-    build_flags_f: "-mtune=znver3 -march=znver3 -fPIC"
+#    build_flags_c: "-mtune=znver3 -march=znver3 -fPIC"
+#    build_flags_f: "-mtune=znver3 -march=znver3 -fPIC"
     enabled: true
 
   - name: openblas
@@ -79,5 +80,5 @@ modules:
   - name: python-packages
     enabled: true
   
-  - name: cleanup
+  - name: jupyter
     enabled: true
