@@ -9,7 +9,15 @@ pip install \
     dynasor \
     hiphive \
     ipython \
-    ipympl
+    ipympl \
+    mp_api \
+    orb-models \
+    pytest
+
+touch /dev/null
+#    fairchem-core \
 
 EOF
+
+ENV FAIRCHEM_CACHE_DIR={data_prefix}/potentials
 

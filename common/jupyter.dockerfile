@@ -1,4 +1,5 @@
-WORKDIR /home/ubuntu
+USER ${user}
+WORKDIR /home/${user}
 RUN mkdir -p .jupyter && touch .jupyter/jupyter_lab_config.py
 
 USER root

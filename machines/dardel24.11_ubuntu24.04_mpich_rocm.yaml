@@ -14,11 +14,11 @@ environment_vars:
 
 # Variables for installation
 install_vars:
-  install_prefix: '/opt/software'
-  rocm_arch: 'gfx90a'
-  build_flags_c: "-O3 -march=znver3 -mtune=znver3"
-  build_flags_f: "-O3 -march=znver3 -mtune=znver3"
-  build_flags_cxx: "-O3 -march=znver3 -mtune=znver3"
+  install_prefix: /opt/software
+  rocm_arch: gfx90a
+  build_flags_c: -O3 -march=znver3 -mtune=znver3
+  build_flags_f: -O3 -march=znver3 -mtune=znver3
+  build_flags_cxx: -O3 -march=znver3 -mtune=znver3
   
 
 # Software modules to install
@@ -27,54 +27,54 @@ modules:
     enabled: true
   
   - name: python
-    version: '3.12'
+    version: 3.12
     enabled: true
   
   - name: rocm
-    version: '6.3.4'
+    version: 6.3.4
     enabled: true
     
   - name: mpich
-    version: '4.3.1'
+    version: 4.3.1
     enabled: true
   
   - name: fftw
-    version: '3.3.10'
+    version: 3.3.10
 #    build_flags_c: "-mtune=znver3 -march=znver3 -fPIC"
 #    build_flags_f: "-mtune=znver3 -march=znver3 -fPIC"
     enabled: true
 
   - name: openblas
-    version: '0.3.30'
+    version: 0.3.30
     enabled: true
     install_vars:
-      openblas_target: 'ZEN'
+      openblas_target: ZEN
 
   - name: scalapack
-    version: '2.2.2'
+    version: 2.2.2
     enabled: true
   
   - name: libxc
-    version: '7.0.0'
+    version: 7.0.0
     enabled: true
   
   - name: libvdwxc
-    version: '0.5.0'
+    version: 0.5.0
     enabled: True
 
   - name: cupy_rocm
-    version: '13.6.0'
+    version: 13.6.0
     enabled: true
 
   - name: abtem
-    version: 'git'
+    version: git
     enabled: true
   
   - name: mpi4py
     enabled: true
   
   - name: gpaw
-    version: '25.7.0'
+    version: 25.7.0
     enabled: true
   
   - name: python-packages

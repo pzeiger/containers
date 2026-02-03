@@ -51,7 +51,10 @@ class ContainerBuilder:
         """Substitute variables in module content"""
         for key, value in variables.items():
             placeholder = "{" + key + "}"
-            content = content.replace(placeholder, str(value))
+            if type(value) == bool:
+                content = content.replace(placeholder, str(int(value)))
+            else:
+                content = content.replace(placeholder, str(value))
         return content
 
     def get_all_install_vars(self, config: Dict[str, Any], module: Dict[str, Any]) -> Dict[str, Any]:
@@ -67,6 +70,9 @@ class ContainerBuilder:
         # Module metadata
         install_vars['version'] = module.get('version', 'latest')
         install_vars['name'] = module.get('name', 'unknown')
+
+#        for key, val in install_vars.items():
+#            print(key, type(val))
         return install_vars
 
     
@@ -119,6 +125,7 @@ class ContainerBuilder:
                     if 'install_vars' in module:
                         install_vars.update(module['install_vars'])
 
+#                    print(install_vars)
                     module_content = self.substitute_variables(module_content, install_vars)
                     
                     lines.append(f"# Module: {module_name} (version: {install_vars['version']})")
@@ -136,8 +143,8 @@ class ContainerBuilder:
         # Final cleanup
         lines.append("# Final cleanup")
         lines.append("USER root")
-        lines.append("RUN apt-get clean && rm -rf /var/lib/apt/lists/* && pip cache purge && rm -r /tmp/*")
-        lines.append("USER ubuntu")
+        lines.append("RUN apt-get clean && rm -rf /var/lib/apt/lists/* || true && pip cache purge && rm -rf /tmp/* || true")
+        lines.append(f"USER {config['environment_vars']['user']}")
         lines.append(f"WORKDIR {config['environment_vars']['workdir']}")
         lines.append("")
         

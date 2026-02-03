@@ -145,7 +145,8 @@ INNER_EOF
 cp -a ${GPAW_CONFIG} /home/ubuntu/.gpaw
 chown -R ubuntu:ubuntu /home/ubuntu/.gpaw
 
-pip-native install --break-system-packages gpaw #--verbose
+#pip-native install --break-system-packages gpaw #--verbose
+pip install gpaw #--verbose
 
 EOF
 
@@ -155,7 +156,7 @@ USER ubuntu
 WORKDIR ${workdir}
 
 RUN << 'EOF'
-ldd /usr/local/lib/python3.12/dist-packages/_gpaw.cpython-312-x86_64-linux-gnu.so
+#ldd /usr/local/lib/python3.12/dist-packages/_gpaw.cpython-312-x86_64-linux-gnu.so
 gpaw info
 gpaw test
 gpaw -P 4 test
