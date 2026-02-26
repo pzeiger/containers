@@ -1,7 +1,10 @@
 USER root
 RUN << 'EOF'
+
+pip list
+
 pip install \
-    phonopy \
+    phonopy\<=2.45.1 \
     seekpath \
     pymatgen \
     wannierberri \
@@ -12,12 +15,19 @@ pip install \
     ipympl \
     mp_api \
     orb-models \
-    pytest
+    scikit-image
 
-touch /dev/null
 #    fairchem-core \
+
+
+pip install git+https://github.com/h-walk/PySlice.git
+
+pip install --no-build-isolation dynaphopy
+#    git+https://github.com/pzeiger/DynaPhoPy.git
+
 
 EOF
 
 ENV FAIRCHEM_CACHE_DIR={data_prefix}/potentials
+ENV ORBV3_CACHE_DIR=/opt/data/potentials/ORBv3
 
