@@ -24,7 +24,18 @@ apt-get install \
     gfortran \
     git \
     libtool \
-    wget
+    wget \
+    mpi-default-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    libfftw3-dev \
+    libfftw3-mpi-dev \
+    libscalapack-mpi-dev \
+    libhdf5-dev \
+    python3-tk \
+    python3-pip \
+    python3-venv
+
 
 ## Create environment paths script
 #cat > {install_prefix}/environment.sh <<'ENVIRONMENT'

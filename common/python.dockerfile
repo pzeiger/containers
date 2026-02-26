@@ -4,9 +4,14 @@ USER root
 # common/uv_python.dockerfile
 RUN <<'EOF'
 
+if [ ! -f "${python_venv}/pyvenv.cfg" ]; then
+    python3 -m venv "${python_venv}" --upgrade-deps
+    source "${python_venv}/bin/activate"
+fi
+
 pip install --no-cache uv
 
-mv ${python_venv}/bin/pip ${python_venv}/bin/pip-native
+mv "${python_venv}/bin/pip" "${python_venv}/bin/pip-native"
 
 cat > ${python_venv}/bin/pip << 'PIP_WRAPPER'
 #!/usr/bin/env bash
@@ -82,4 +87,4 @@ pip install -U setuptools wheel
 
 EOF
 
-
+ENV PATH="${python_venv}/bin:$PATH"

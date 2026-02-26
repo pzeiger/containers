@@ -10,11 +10,15 @@ build_args:
 
 # Permanent environment variables
 environment_vars:
+  user: ubuntu
   workdir: /workspace
+  python_venv: /opt/venv
+  bin_dir: /opt/bin
 
 # Variables for installation
 install_vars:
   install_prefix: /opt/software
+  data_prefix: /opt/data
   rocm_arch: gfx90a
   build_flags_c: -O3 -march=znver3 -mtune=znver3
   build_flags_f: -O3 -march=znver3 -mtune=znver3
@@ -33,7 +37,7 @@ modules:
   - name: rocm
     version: 6.3.4
     enabled: true
-    
+  
   - name: mpich
     version: 4.3.1
     enabled: true
@@ -56,11 +60,14 @@ modules:
   
   - name: libxc
     version: 7.0.0
-    enabled: true
+    enabled: true 
   
   - name: libvdwxc
     version: 0.5.0
-    enabled: True
+    enabled: true
+  
+  - name: numba-hip
+    enabled: true
 
   - name: cupy_rocm
     version: 13.6.0
