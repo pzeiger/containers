@@ -52,7 +52,7 @@ ENV LD_LIBRARY_PATH={install_prefix}/mpich-default/lib:${LD_LIBRARY_PATH:-}
 
 
 USER ubuntu
-WORKDIR ${workdir}
+WORKDIR ${WORKDIR}
 RUN << 'EOF'
 wget https://raw.githubusercontent.com/PDC-support/introduction-to-pdc/master/example/hello_world_mpi.c
 mpicc -fopenmp -o ./hello_world_mpi hello_world_mpi.c

@@ -153,13 +153,17 @@ EOF
 
 
 USER ubuntu
-WORKDIR ${workdir}
+WORKDIR ${WORKDIR}
 
 RUN << 'EOF'
 #ldd /usr/local/lib/python3.12/dist-packages/_gpaw.cpython-312-x86_64-linux-gnu.so
 gpaw info
 gpaw test
 gpaw -P 4 test
+rm test.txt
+
+pip install "git+https://github.com/pzeiger/gpaw-weaver.git"
+
 
 EOF
 

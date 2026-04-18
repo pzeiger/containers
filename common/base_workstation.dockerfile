@@ -1,6 +1,14 @@
 # Set default behavior of shell
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND="noninteractive"
+
+USER ${DEFAULT_USER}
+RUN << 'EOF'
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+EOF
+
+
 USER root
 
 # Base development tools module
@@ -14,8 +22,10 @@ APT::Get::Assume-Yes "true";
 APT_CONF
 
 # Update and install
+apt-get clean
 apt-get update
 apt-get full-upgrade
+apt-get update --fix-missing
 apt-get install \
     autoconf \
     automake \
@@ -49,4 +59,8 @@ apt-get install \
 #echo "source {install_prefix}/environment.sh" >> /etc/bash.bashrc
 
 EOF
+
+# This is a supposed fix to help with gfx1151
+# See: https://github.com/pytorch/pytorch/issues/164346
+ENV HSA_OVERRIDE_GFX_VERSION="11.0.0"
 

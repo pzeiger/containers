@@ -4,11 +4,10 @@ USER root
 RUN <<'EOF'
 
 # Set versions
-
+CUPY_VERSION={version}
 ROCM_VERSION=$(amd-smi version 2>/dev/null | grep -o 'ROCm version: [0-9.]\+' | cut -d' ' -f3 || true)
 
 echo $ROCM_VERSION
-CUPY_VERSION={version}
 BUILD_FROM_SOURCE={build_from_source}
 
 if [ ${BUILD_FROM_SOURCE} -eq 1 ]; then

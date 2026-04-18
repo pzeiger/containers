@@ -13,7 +13,7 @@ build_args:
 
 # Permanent environment variables
 environment_vars:
-  user: ubuntu
+  default_user: ubuntu
   workdir: /workspace
   python_venv: /opt/venv
   bin_dir: /opt/bin

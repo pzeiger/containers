@@ -1,5 +1,0 @@
-ENV DOCKER_USER={user}
-
-USER ${DOCKER_USER}
-
-

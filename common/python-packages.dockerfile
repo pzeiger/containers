@@ -20,7 +20,7 @@ pip install \
 #    fairchem-core \
 
 
-pip install git+https://github.com/h-walk/PySlice.git
+pip install git+https://github.com/h-walk/PySlice.git@py3.11
 
 pip install --no-build-isolation dynaphopy
 #    git+https://github.com/pzeiger/DynaPhoPy.git

@@ -1,7 +1,10 @@
 machine_name: default_ubuntu24.04
 #container_type: apptainer
 container_type: docker
-base_image: rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
+
+base_image: rocm/pytorch:rocm7.2_ubuntu24.04_py3.12_pytorch_release_2.8.0
+#base_image: rocm/pytorch:rocm7.0_ubuntu24.04_py3.12_pytorch_release_2.8.0
+#base_image: rocm/pytorch:rocm7.1_ubuntu24.04_py3.12_pytorch_release_2.8.0
 #base_image: rocm/dev-ubuntu-24.04:7.2-complete
 #base_image: rocm/dev-ubuntu-24.04:7.1.1-complete
 #base_image: rocm/dev-ubuntu-24.04:6.4.4-complete
@@ -13,20 +16,21 @@ build_args:
 
 # Permanent environment variables
 environment_vars:
-  user: ubuntu
+  default_user: ubuntu
   workdir: /workspace
   python_venv: /opt/venv
   bin_dir: /opt/bin
 
 # Variables for installation
 install_vars:
-  install_prefix: /opt/software
-  data_prefix: /opt/data
-#  rocm_version: 7.2
-  rocm_arch: gfx1151
-  build_flags_c: -O3 -march=native -mtune=native
-  build_flags_f: -O3 -march=native -mtune=native
-  build_flags_cxx: -O3 -march=native -mtune=native
+  install_prefix:   /opt/software
+  data_prefix:      /opt/data
+  rocm_version:     7.2.0
+  rocm_arch:        gfx1151
+  build_flags_c:    -O3 -march=native -mtune=native
+  build_flags_f:    -O3 -march=native -mtune=native
+  build_flags_cxx:  -O3 -march=native -mtune=native
+  build_threads:    16
   
 
 # Software modules to install
@@ -34,6 +38,9 @@ modules:
   - name: base_workstation
     enabled: true
   
+  - name: claude
+    enabled: true
+
   - name: oneapi
     enabled: false
   
@@ -53,12 +60,15 @@ modules:
     enabled: true
 
   - name: cupy_rocm
-    version: 13.6.0
-    enabled: false
+    version: 14.0.1
+#    version: 13.6.0
+    enabled: true
+    install_vars:
+      build_from_source: false
   
   - name: cupy_rocm_prerelease
     version: 14.0.0rc1
-    enabled: true
+    enabled: false
     install_vars:
       build_from_source: true
   

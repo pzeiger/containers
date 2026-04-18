@@ -1,5 +1,5 @@
-USER ${user}
-WORKDIR /home/${user}
+USER ${DEFAULT_USER}
+WORKDIR /home/${DEFAULT_USER}
 RUN mkdir -p .jupyter && touch .jupyter/jupyter_lab_config.py
 
 USER root

@@ -4,24 +4,24 @@ USER root
 # common/uv_python.dockerfile
 RUN <<'EOF'
 
-if [ ! -f "${python_venv}/pyvenv.cfg" ]; then
-    python3 -m venv "${python_venv}" --upgrade-deps
-    source "${python_venv}/bin/activate"
+if [ ! -f "${PYTHON_VENV}/pyvenv.cfg" ]; then
+    python3 -m venv "${PYTHON_VENV}" --upgrade-deps
+    source "${PYTHON_VENV}/bin/activate"
 fi
 
 pip install --no-cache uv
 
-mv "${python_venv}/bin/pip" "${python_venv}/bin/pip-native"
+mv "${PYTHON_VENV}/bin/pip" "${PYTHON_VENV}/bin/pip-native"
 
-cat > ${python_venv}/bin/pip << 'PIP_WRAPPER'
+cat > ${PYTHON_VENV}/bin/pip << 'PIP_WRAPPER'
 #!/usr/bin/env bash
 # Wrapper: redirect pip calls to uv pip for this venv
 
-VENV_DIR="${python_venv}"
+VENV_DIR="${PYTHON_VENV}"
 exec uv pip --no-managed-python --no-cache "$@"
 PIP_WRAPPER
 
-chmod +x ${python_venv}/bin/pip
+chmod +x ${PYTHON_VENV}/bin/pip
 
 echo "✓ Python environment ready"
 uv --version
@@ -84,7 +84,4 @@ pip install -U setuptools wheel
 ## Set Python as default
 #ln -sf /usr/bin/python3 /usr/bin/python
 
-
 EOF
-
-ENV PATH="${python_venv}/bin:$PATH"

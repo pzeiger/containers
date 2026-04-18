@@ -102,7 +102,7 @@ class ContainerBuilder:
         if 'environment_vars' in config:
             try:
                 for key, value in config['environment_vars'].items():
-                    lines.append(f"ENV {key}={value}")
+                    lines.append(f"ENV {key.upper()}={value}")
                 lines.append("")
             except AttributeError:    # no keys in config
                 pass
@@ -133,8 +133,8 @@ class ContainerBuilder:
                     lines.append("")
                     
                     # We always switch to an unprivileged user and cd to their home
-                    lines.append("USER ubuntu")
-                    lines.append(f"WORKDIR {config['environment_vars']['workdir']}")
+                    lines.append(f"USER {config['environment_vars']['default_user']}")
+                    lines.append(f"WORKDIR {config['environment_vars']['workdir'].upper()}")
                     
                 except FileNotFoundError as e:
                     print(f"  Warning: {e}")
@@ -144,8 +144,8 @@ class ContainerBuilder:
         lines.append("# Final cleanup")
         lines.append("USER root")
         lines.append("RUN apt-get clean && rm -rf /var/lib/apt/lists/* || true && pip cache purge && rm -rf /tmp/* || true")
-        lines.append(f"USER {config['environment_vars']['user']}")
-        lines.append(f"WORKDIR {config['environment_vars']['workdir']}")
+        lines.append(f"USER {config['environment_vars']['default_user']}")
+        lines.append(f"WORKDIR {config['environment_vars']['workdir'].upper()}")
         lines.append("")
         
         return "\n".join(lines)
@@ -209,7 +209,7 @@ class ContainerBuilder:
             lines.append("%environment")
             try:
                 for key, value in config['environment_vars'].items():
-                    lines.append(f"    export {key}={value}")
+                    lines.append(f"    export {key.upper()}={value}")
             except AttributeError:    # no keys in config
                 pass
         return "\n".join(lines)
