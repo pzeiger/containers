@@ -3,6 +3,8 @@ RUN mkdir -p /home/ubuntu/.gpaw
 USER root
 WORKDIR /tmp
 
+ARG REBUILD_FROM_GPAW=unknown
+
 RUN << 'EOF'
 
 SCALAPACK_INCLUDES="${LIBSCALAPACK_INCLUDE_DIR:-/usr/include}"
@@ -83,14 +85,16 @@ for mlib in my_libs:
 ###################
 # SCALAPACK
 ###################
-if 'scalapack' not in libraries:
+if 'scalapack' not in libraries or 'scalapack-openmpi' not in libraries:
     tmpdir = Path('/usr/lib/x86_64-linux-gnu')
-    if (tmpdir / 'libscalapack.so').exists():
+    if (tmpdir / 'libscalapack-openmpi.so').exists():
+        libraries += ['scalapack-openmpi']
         scalapack = True
+        blacs = True
+    elif (tmpdir / 'libscalapack.so').exists():
         libraries += ['scalapack']
-    elif (tmpdir / 'libscalapack-mpi.so').exists():
         scalapack = True
-        libraries += ['scalapack-mpi']
+        blacs = True
 
 if 'openblas' not in libraries:
     libraries += ['openblas']
@@ -103,19 +107,25 @@ if 1:
 if 1:
     libvdwxc = True
     if 'vdwxc' not in libraries:
-    	libraries += ['vdwxc']
+        libraries += ['vdwxc']
 
 ###################
 # FFTW3
 ###################
 if 1:
-    tmpdir = Path('/usr/include')
-    if 'fftw3' not in libraries:
+    tmpdir = Path('/lib/x86_64-linux-gnu')
+
+    # Prefer OMP threaded version
+    if 'fftw3_omp' not in libraries:
+        if (tmpdir / 'libfftw3_omp.so').exists():
+            fftw = True
+            libraries += ['fftw3_omp']
+    elif 'fftw3' not in libraries:
         if (tmpdir / 'libfftw3.so').exists():
             fftw = True
             libraries += ['fftw3']
     
-    if 'fftw3' not in libraries:
+    if 'fftw3_mpi' not in libraries:
         if (tmpdir / 'libfftw3_mpi.so').exists():
             fftw = True
             libraries += ['fftw3_mpi']
@@ -135,18 +145,13 @@ if 0:
        ]
     libraries += ['amdhip64', 'hipblas']
 
-
-#blacs = True
-#if 'blacs' not in libraries:
-#    libraries += ['blacs']
-    
 INNER_EOF
 
 cp -a ${GPAW_CONFIG} /home/ubuntu/.gpaw
 chown -R ubuntu:ubuntu /home/ubuntu/.gpaw
 
-#pip-native install --break-system-packages gpaw #--verbose
 pip install gpaw #--verbose
+pip install "git+https://github.com/pzeiger/gpaw-weaver.git"
 
 EOF
 
@@ -161,9 +166,6 @@ gpaw info
 gpaw test
 gpaw -P 4 test
 rm test.txt
-
-pip install "git+https://github.com/pzeiger/gpaw-weaver.git"
-
 
 EOF
 

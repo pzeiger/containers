@@ -86,7 +86,11 @@ modules:
   - name: gpaw
     version: 25.7.0
     enabled: true
-  
+
+  - name: qe
+    version: 7.5
+    enabled: true
+
   - name: python-packages
     enabled: true
   

@@ -37,6 +37,7 @@ apt-get install \
     wget \
     mpi-default-dev \
     libopenblas-dev \
+    libscalapack-openmpi-dev \
     liblapack-dev \
     libfftw3-dev \
     libfftw3-mpi-dev \
