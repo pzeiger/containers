@@ -19,10 +19,10 @@ environment_vars:
   default_user: ubuntu
   workdir: /workspace
   python_venv: /opt/venv
-  bin_dir: /opt/bin
 
 # Variables for installation
 install_vars:
+  bin_dir:          /opt/bin
   install_prefix:   /opt/software
   data_prefix:      /opt/data
   rocm_version:     7.2.0

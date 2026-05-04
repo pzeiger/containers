@@ -15,6 +15,7 @@ USER root
 RUN <<'EOF'
 
 mkdir -p {install_prefix}
+mkdir -p {bin_dir}
 
 # Create APT configuration
 cat > /etc/apt/apt.conf.d/99custom <<'APT_CONF'

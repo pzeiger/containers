@@ -20,6 +20,7 @@ OPENBLAS_INCLUDES="${LIBOPENBLAS_INCLUDE_DIR:-/usr/include}"
 OPENBLAS_LIBS="${LIBOPENBLAS_LIBS_DIR:-/usr/lib/x86_64-linux-gnu}"
 
 ROCM_ARCH={rocm_arch}
+BIN_DIR={bin_dir}
 
 LIBXCROOT="${LIBXC_HOME}" 
 
@@ -36,7 +37,6 @@ LIBXCROOT="${LIBXC_HOME}"
 mkdir ./build
 cd ./build
 echo "${SCALAPACK_LIBS}"
-ls -ahl "${LIBXC_HOME}/"
 #ls -ahl "${SCALAPACK_LIBS}/libscala*"
 cmake -DCMAKE_Fortran_COMPILER=mpif90 \
       -DCMAKE_C_COMPILER=mpicc \
@@ -60,6 +60,8 @@ cmake -DCMAKE_Fortran_COMPILER=mpif90 \
 make -j {build_threads}
 make install
 
+ls -ahl "/opt/"
+ls -ahl "/opt/bin"
 for fname in ${QE_INSTALL_PREFIX}/bin/*;
 do
     exe=$(basename ${fname})
